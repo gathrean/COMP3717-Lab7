@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Lab7GathreanDelaCruz</string>
+
+    <string-array name="Characters">
+        <item>Bat Bron</item>
+        <item>Bee Bron></item>
+        <item>Cheese Drake</item>
+        <item>Fortnite Bron</item>
+        <item>Frog Bron</item>
+        <item>Silly Kitty Bron</item>
+        <item>Sponge Bron</item>
+        <item>Unicorn Bron</item>
+        <item></item>
+    </string-array>
+
+</resources>
