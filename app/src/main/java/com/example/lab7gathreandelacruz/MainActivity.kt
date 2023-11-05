@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -69,18 +70,22 @@ class MainActivity : ComponentActivity() {
                         Character(characterNames[7], R.drawable.spongebron),
                         Character(characterNames[8], R.drawable.unicornbron),
                     )
-                    MainContent(characterList)
+
+                    val shuffledCharacterList = remember { mutableStateOf(characterList) }
+
+                    MainContent(shuffledCharacterList)
                 }
             }
         }
     }
+
     @Composable
-    fun MainContent(characterList: List<Character>) {
+    fun MainContent(characterListState: MutableState<List<Character>>) {
         // MutableState for characterList
-        val characterListState = remember { mutableStateOf(characterList) }
+//        val characterListState = remember { mutableStateOf(characterList) }
 
         // Split the character list into chunks of 3
-        val chunkedList = characterList.chunked(3)
+        val chunkedList = characterListState.value.chunked(3)
 
         // Main content wrapped in a column so that the shuffle button is always at the top
         Column(
@@ -90,15 +95,18 @@ class MainActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             // Shuffle button
             Button(
                 onClick = {
-                    // Shuffle the characterListState.value and update it
-                    characterListState.value = characterListState.value.shuffled()
+                    // Shuffle the characterList and update characterListState
+                    val shuffledList = characterListState.value.shuffled()
+                    characterListState.value = shuffledList
                 },
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier
+                    .padding(8.dp)
             ) {
-                Text(text = "Shuffle")
+                Text(text = "Shuffle", fontSize = 24.sp)
             }
 
             // LazyColumn to display the list of characters
