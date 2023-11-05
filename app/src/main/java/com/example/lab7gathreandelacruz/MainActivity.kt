@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,47 +49,54 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Lab7GathreanDelaCruzTheme {
-                // A surface container using the 'background' color from the theme
+                // A surface container using the desired background color
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color(0xFF3949AB)
                 ) {
+                    // String array of character names
+                    val characterNames = stringArrayResource(id = R.array.characters)
 
+                    // List of characters
+                    val characterList = listOf(
+                        Character(characterNames[0], R.drawable.batbron),
+                        Character(characterNames[1], R.drawable.beebron),
+                        Character(characterNames[2], R.drawable.cheesedrake),
+                        Character(characterNames[3], R.drawable.fortnitebron),
+                        Character(characterNames[4], R.drawable.frogbron),
+                        Character(characterNames[5], R.drawable.piedrake),
+                        Character(characterNames[6], R.drawable.sillykittybron),
+                        Character(characterNames[7], R.drawable.spongebron),
+                        Character(characterNames[8], R.drawable.unicornbron),
+                    )
+                    MainContent(characterList)
                 }
             }
-
-            val characterNames = stringArrayResource(id = R.array.characters)
-
-            val characterList = listOf(
-                Character(characterNames[0], R.drawable.batbron),
-                Character(characterNames[1], R.drawable.beebron),
-                Character(characterNames[2], R.drawable.cheesedrake),
-                Character(characterNames[3], R.drawable.fortnitebron),
-                Character(characterNames[4], R.drawable.frogbron),
-                Character(characterNames[5], R.drawable.piedrake),
-                Character(characterNames[6], R.drawable.sillykittybron),
-                Character(characterNames[7], R.drawable.spongebron),
-                Character(characterNames[8], R.drawable.unicornbron),
-            )
-            MainContent(characterList)
         }
     }
 
     @Composable
     fun MainContent(characterList: List<Character>) {
-        val chunkedList = characterList.chunked(3) // Split the character list into chunks of 3
 
+        // Split the character list into chunks of 3
+        val chunkedList = characterList.chunked(3)
+
+        // LazyColumn to display the list of characters
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
+            // Iterate through the chunked list
             items(chunkedList.size) { rowIndex ->
+
+                // LazyRow to display the row of characters
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
                 ) {
+                    // Iterate through the row of characters
                     items(chunkedList[rowIndex]) { character ->
                         CharacterCard(character)
                         Spacer(modifier = Modifier.width(8.dp))
@@ -101,23 +109,36 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun CharacterCard(character: Character) {
+        // Boolean to check if the card is expanded
         var isExpanded = remember { mutableStateOf(false) }
 
+        // Displays the character card
         Card(
             modifier = Modifier
                 .padding(8.dp)
-//                .width(200.dp)
                 .clickable {
                     isExpanded = isExpanded
                 },
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
+
+            // Displays the name of the character
+            Column {
+                Text(
+                    character.name,
+                    fontSize = 24.sp,
+                    modifier = Modifier
+                        .padding(8.dp)
+                )
+            }
+
+            // Displays the image of the character
             Image(
                 painter = painterResource(id = character.imageId),
                 contentDescription = character.name,
                 modifier = Modifier
-//                    .height(200.dp)
-//                    .width(200.dp)
+                    .height(200.dp)
+                    .fillMaxWidth()
                     .clip(shape = RectangleShape)
             )
         }
