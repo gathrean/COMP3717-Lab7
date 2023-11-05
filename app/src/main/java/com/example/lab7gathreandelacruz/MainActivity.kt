@@ -10,6 +10,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -74,19 +76,28 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MainContent(characterList: List<Character>) {
+        val chunkedList = characterList.chunked(3) // Split the character list into chunks of 3
 
-        val characterStateList = remember {
-            mutableStateListOf<Character>()
-        }
-
-        LazyColumn (
+        LazyColumn(
             modifier = Modifier
-        ){
-            items(characterList.size) {
-                CharacterCard(characterList[it])
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            items(chunkedList.size) { rowIndex ->
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                ) {
+                    items(chunkedList[rowIndex]) { character ->
+                        CharacterCard(character)
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                }
             }
         }
     }
+
 
     @Composable
     fun CharacterCard(character: Character) {
@@ -95,7 +106,7 @@ class MainActivity : ComponentActivity() {
         Card(
             modifier = Modifier
                 .padding(8.dp)
-                .fillMaxWidth()
+//                .width(200.dp)
                 .clickable {
                     isExpanded = isExpanded
                 },
@@ -105,19 +116,10 @@ class MainActivity : ComponentActivity() {
                 painter = painterResource(id = character.imageId),
                 contentDescription = character.name,
                 modifier = Modifier
-                    .height(200.dp)
-                    .fillMaxWidth()
+//                    .height(200.dp)
+//                    .width(200.dp)
                     .clip(shape = RectangleShape)
             )
-            Column {
-                Text(character.name, fontSize = 30.sp)
-                Button(
-                    onClick = { /*TODO*/ },
-                    shape = RectangleShape
-                ) {
-                    Text(text = "View Profile")
-                }
-            }
         }
     }
 
