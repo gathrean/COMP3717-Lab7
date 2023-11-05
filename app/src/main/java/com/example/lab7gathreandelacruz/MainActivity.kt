@@ -74,38 +74,58 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun MainContent(characterList: List<Character>) {
+        // MutableState for characterList
+        val characterListState = remember { mutableStateOf(characterList) }
 
         // Split the character list into chunks of 3
         val chunkedList = characterList.chunked(3)
 
-        // LazyColumn to display the list of characters
-        LazyColumn(
+        // Main content wrapped in a column so that the shuffle button is always at the top
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Iterate through the chunked list
-            items(chunkedList.size) { rowIndex ->
+            // Shuffle button
+            Button(
+                onClick = {
+                    // Shuffle the characterListState.value and update it
+                    characterListState.value = characterListState.value.shuffled()
+                },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(text = "Shuffle")
+            }
 
-                // LazyRow to display the row of characters
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                ) {
-                    // Iterate through the row of characters
-                    items(chunkedList[rowIndex]) { character ->
-                        CharacterCard(character)
-                        Spacer(modifier = Modifier.width(8.dp))
+            // LazyColumn to display the list of characters
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ) {
+                // Iterate through the chunked list
+                items(chunkedList.size) { rowIndex ->
+
+                    // LazyRow to display the row of characters
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    ) {
+                        // Iterate through the row of characters
+                        items(chunkedList[rowIndex]) { character ->
+                            CharacterCard(character)
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
                     }
                 }
             }
         }
     }
-
 
     @Composable
     fun CharacterCard(character: Character) {
