@@ -43,9 +43,10 @@ class MainActivity : ComponentActivity() {
                 Character(characterNames[2], R.drawable.cheesedrake),
                 Character(characterNames[3], R.drawable.fortnitebron),
                 Character(characterNames[4], R.drawable.frogbron),
-                Character(characterNames[5], R.drawable.sillykittybron),
-                Character(characterNames[6], R.drawable.spongebron),
-                Character(characterNames[7], R.drawable.unicornbron),
+                Character(characterNames[5], R.drawable.piedrake),
+                Character(characterNames[6], R.drawable.sillykittybron),
+                Character(characterNames[7], R.drawable.spongebron),
+                Character(characterNames[8], R.drawable.unicornbron),
             )
             MainContent(characterList)
         }
