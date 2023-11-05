@@ -109,38 +109,44 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun CharacterCard(character: Character) {
-        // Boolean to check if the card is expanded
-        var isExpanded = remember { mutableStateOf(false) }
+        // Create a MutableState variable for isExpanded
+        val isExpanded = remember { mutableStateOf(false) }
 
         // Displays the character card
         Card(
             modifier = Modifier
                 .padding(8.dp)
                 .clickable {
-                    isExpanded = isExpanded
+                    // Toggle the isExpanded value
+                    isExpanded.value = !isExpanded.value
                 },
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
+            // Column to display the character card
+            Column(
+                modifier = Modifier
+                    .size(if (isExpanded.value) 300.dp else 200.dp)
+                    .clip(shape = RectangleShape)
+            ) {
+                // Displays the name of the character if not expanded
+                if (!isExpanded.value) {
+                    Text(
+                        character.name,
+                        fontSize = 24.sp,
+                        modifier = Modifier
+                            .padding(8.dp)
+                    )
+                }
 
-            // Displays the name of the character
-            Column {
-                Text(
-                    character.name,
-                    fontSize = 24.sp,
+                // Displays the image of the character
+                Image(
+                    painter = painterResource(id = character.imageId),
+                    contentDescription = character.name,
                     modifier = Modifier
-                        .padding(8.dp)
+                        .fillMaxWidth() // Fill the available width
+                        .fillMaxHeight() // Fill the available height
                 )
             }
-
-            // Displays the image of the character
-            Image(
-                painter = painterResource(id = character.imageId),
-                contentDescription = character.name,
-                modifier = Modifier
-                    .height(200.dp)
-                    .fillMaxWidth()
-                    .clip(shape = RectangleShape)
-            )
         }
     }
 
