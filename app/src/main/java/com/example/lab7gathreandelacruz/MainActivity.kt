@@ -1,18 +1,38 @@
 package com.example.lab7gathreandelacruz
 
 import android.os.Bundle
+import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.lab7gathreandelacruz.ui.theme.Lab7GathreanDelaCruzTheme
 
 // Character data class for the list of characters
@@ -51,14 +71,54 @@ class MainActivity : ComponentActivity() {
             MainContent(characterList)
         }
     }
-}
 
-@Composable
-fun MainContent(characterList: List<Character>) {
+    @Composable
+    fun MainContent(characterList: List<Character>) {
 
-    val characterStateList = remember {
-        mutableStateListOf<Character>()
+        val characterStateList = remember {
+            mutableStateListOf<Character>()
+        }
+
+        LazyColumn (
+            modifier = Modifier
+        ){
+            items(characterList.size) {
+                CharacterCard(characterList[it])
+            }
+        }
     }
 
-    Text(text = "Hello World!")
+    @Composable
+    fun CharacterCard(character: Character) {
+        var isExpanded = remember { mutableStateOf(false) }
+
+        Card(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .clickable {
+                    isExpanded = isExpanded
+                },
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = character.imageId),
+                contentDescription = character.name,
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth()
+                    .clip(shape = RectangleShape)
+            )
+            Column {
+                Text(character.name, fontSize = 30.sp)
+                Button(
+                    onClick = { /*TODO*/ },
+                    shape = RectangleShape
+                ) {
+                    Text(text = "View Profile")
+                }
+            }
+        }
+    }
+
 }
