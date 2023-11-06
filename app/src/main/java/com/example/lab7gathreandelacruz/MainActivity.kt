@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -73,10 +72,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MainContent(characterListState: MutableState<List<Character>>) {
         // MutableState for characterList
-//        val characterListState = remember { mutableStateOf(characterList) }
-
-        // Split the character list into chunks of 3
-        val chunkedList = characterListState.value.chunked(3)
+        // val characterListState = remember { mutableStateOf(characterList) }
 
         // Main content wrapped in a column so that the shuffle button is always at the top
         Column(
@@ -100,25 +96,28 @@ class MainActivity : ComponentActivity() {
                 Text(text = "Shuffle", fontSize = 24.sp)
             }
 
+            // Calculate the number of rows needed based on the number of characters
+            val numRows = (characterListState.value.size + 2) / 3
+
             // LazyColumn to display the list of characters
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             ) {
-                // Iterate through the chunked list
-                items(chunkedList.size) { rowIndex ->
-
+                items(numRows) { rowIndex ->
                     // LazyRow to display the row of characters
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
                     ) {
-                        // Iterate through the row of characters
-                        items(chunkedList[rowIndex]) { character ->
-                            CharacterCard(character)
-                            Spacer(modifier = Modifier.width(8.dp))
+                        items(3) { columnIndex ->
+                            val characterIndex = rowIndex * 3 + columnIndex
+                            if (characterIndex < characterListState.value.size) {
+                                CharacterCard(characterListState.value[characterIndex])
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
                         }
                     }
                 }
